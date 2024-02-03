@@ -22,7 +22,9 @@
     "lint": "eslint \"src/**/*.ts*\"",
     "preview": "qwik build preview && vite preview --open",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik"
+    "qwik": "qwik",
+    "start:typesense": "docker compose up",
+    "index:typesense": "npx tsx ./scripts/indexTypesense.ts"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.4.3",
@@ -31,10 +33,12 @@
     "@types/node": "^20.11.6",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
+    "dotenv": "^16.4.1",
     "eslint": "^8.56.0",
     "eslint-plugin-qwik": "^1.4.3",
     "prettier": "^3.2.4",
     "typescript": "5.3.3",
+    "typesense": "^1.7.2",
     "undici": "*",
     "vite": "^5.0.12",
     "vite-tsconfig-paths": "^4.2.1"
