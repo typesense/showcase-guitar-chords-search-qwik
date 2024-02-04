@@ -1,112 +1,103 @@
-import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { component$, useVisibleTask$ } from '@builder.io/qwik';
 
-import Counter from "../components/starter/counter/counter";
-import Hero from "../components/starter/hero/hero";
-import Infobox from "../components/starter/infobox/infobox";
-import Starter from "../components/starter/next-steps/next-steps";
+import type { DocumentHead } from '@builder.io/qwik-city';
+import Heading from '~/components/Heading/Heading';
+import { typesenseInstantsearchAdapter } from '~/utils/typesense';
+import instantsearch from 'instantsearch.js';
+import {
+  configure,
+  infiniteHits,
+  refinementList,
+} from 'instantsearch.js/es/widgets';
+import RenderChord from '~/utils/reactChords';
 
 export default component$(() => {
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(() => {
+    const search = instantsearch({
+      indexName: 'guitar-chords',
+      searchClient: typesenseInstantsearchAdapter().searchClient,
+      future: {
+        preserveSharedStateOnUnmount: true,
+      },
+    });
+
+    search.addWidgets([
+      configure({
+        hitsPerPage: 12,
+        enablePersonalization: true,
+      }),
+      infiniteHits({
+        container: '#infiniteHits',
+        templates: {
+          item(hit, { html, components }) {
+            // @ts-ignore
+            const chord = html([RenderChord(hit.positions[0])]);
+            const positionCount = hit.positions.length;
+
+            return html`
+              <h2 class="chord_name">
+                ${components.Highlight({ attribute: 'key', hit })}${hit.suffix}
+              </h2>
+              ${chord}
+              <span class="posCount"
+                >${positionCount > 1
+                  ? positionCount + ' positions'
+                  : '1 position'}</span
+              >
+            `;
+          },
+        },
+      }),
+      // Refinement lists
+      refinementList({
+        container: '#key_refinementList',
+        attribute: 'key',
+        sortBy: ['name'],
+        limit: 7,
+        showMore: true,
+        showMoreLimit: 100,
+      }),
+      refinementList({
+        container: '#suffix_refinementList',
+        attribute: 'suffix',
+        limit: 8,
+        showMore: true,
+        showMoreLimit: 100,
+        searchable: true,
+        searchablePlaceholder: 'Search suffixes...',
+      }),
+      refinementList({
+        container: '#capo_refinementList',
+        attribute: 'positions.capo',
+      }),
+    ]);
+    search.start();
+  });
   return (
-    <>
-      <Hero />
-      <Starter />
-
-      <div role="presentation" class="ellipsis"></div>
-      <div role="presentation" class="ellipsis ellipsis-purple"></div>
-
-      <div class="container container-center container-spacing-xl">
-        <h3>
-          You can <span class="highlight">count</span>
-          <br /> on me
-        </h3>
-        <Counter />
+    <div class='search_main'>
+      <Heading />
+      <div id='flex_row'>
+        <aside class='SearchAndFilter'>
+          <h2>Key</h2>
+          <div id='key_refinementList'></div>
+          <h2>Suffix</h2>
+          <div id='suffix_refinementList'></div>
+          <h2>Capo</h2>
+          <div id='capo_refinementList'></div>
+        </aside>
+        <div id='infiniteHits'></div>
       </div>
-
-      <div class="container container-flex">
-        <Infobox>
-          <div q:slot="title" class="icon icon-cli">
-            CLI Commands
-          </div>
-          <>
-            <p>
-              <code>npm run dev</code>
-              <br />
-              Starts the development server and watches for changes
-            </p>
-            <p>
-              <code>npm run preview</code>
-              <br />
-              Creates production build and starts a server to preview it
-            </p>
-            <p>
-              <code>npm run build</code>
-              <br />
-              Creates production build
-            </p>
-            <p>
-              <code>npm run qwik add</code>
-              <br />
-              Runs the qwik CLI to add integrations
-            </p>
-          </>
-        </Infobox>
-
-        <div>
-          <Infobox>
-            <div q:slot="title" class="icon icon-apps">
-              Example Apps
-            </div>
-            <p>
-              Have a look at the <a href="/demo/flower">Flower App</a> or the{" "}
-              <a href="/demo/todolist">Todo App</a>.
-            </p>
-          </Infobox>
-
-          <Infobox>
-            <div q:slot="title" class="icon icon-community">
-              Community
-            </div>
-            <ul>
-              <li>
-                <span>Questions or just want to say hi? </span>
-                <a href="https://qwik.builder.io/chat" target="_blank">
-                  Chat on discord!
-                </a>
-              </li>
-              <li>
-                <span>Follow </span>
-                <a href="https://twitter.com/QwikDev" target="_blank">
-                  @QwikDev
-                </a>
-                <span> on Twitter</span>
-              </li>
-              <li>
-                <span>Open issues and contribute on </span>
-                <a href="https://github.com/BuilderIO/qwik" target="_blank">
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <span>Watch </span>
-                <a href="https://qwik.builder.io/media/" target="_blank">
-                  Presentations, Podcasts, Videos, etc.
-                </a>
-              </li>
-            </ul>
-          </Infobox>
-        </div>
-      </div>
-    </>
+    </div>
   );
 });
 
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: 'Welcome to Qwik',
   meta: [
     {
-      name: "description",
-      content: "Qwik site description",
+      name: 'description',
+      content: 'Qwik site description',
     },
   ],
 };
