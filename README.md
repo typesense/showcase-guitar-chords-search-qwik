@@ -1,65 +1,93 @@
-# Qwik City App ⚡️
+<h1 align="center">
+ 🎸 Instant Guitar Chord Positions Search, powered by Typesense - Qwik
+</h1>
+<div align="center">
+  <div><h3>Other versions</h3></div>
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-nuxt-js">NuxtJS</a> | 
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-next-js">NextJS</a> | 
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-angular">Angular 15</a> |
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-vanilla-js">Vanilla JS</a> |
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-astro">Astro</a> |
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-solid-js">SolidJS</a> |
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-remix">Remix</a> |
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-svelte-kit">Sveltekit</a> |
+  <a href="https://github.com/typesense/showcase-guitar-chords-search-qwik">Qwik</a> 
+</div>
 
-- [Qwik Docs](https://qwik.builder.io/)
-- [Discord](https://qwik.builder.io/chat)
-- [Qwik GitHub](https://github.com/BuilderIO/qwik)
-- [@QwikDev](https://twitter.com/QwikDev)
-- [Vite](https://vitejs.dev/)
+## Tech Stack
 
----
+- <a href="https://github.com/typesense/typesense" target="_blank">Typesense</a>
+- Qwik
+- Typescript
+- [typesense-instantsearch-adapter](https://github.com/typesense/typesense-instantsearch-adapter) & instantsearch.js
+- Cypress
+
+All make for a blazingly fast search experience 🔥🔥🔥
+
+The guitar chord dataset & chord svg generation is from <a href="https://github.com/tombatossals/chords-db" target="_blank">tombatossals</a> which contains 2141 chord shapes of 552 chords.
 
 ## Project Structure
 
-This project is using Qwik with [QwikCity](https://qwik.builder.io/qwikcity/overview/). QwikCity is just an extra set of tools on top of Qwik to make it easier to build a full site, including directory-based routing, layouts, and more.
-
-Inside your project, you'll see the following directory structure:
-
-```
-├── public/
-│   └── ...
+```bash
+/
+├── cypress/
+│   └── e2e tests...
+├── scripts/
+│   ├── data/
+│   │   ├── guitar.json
+│   │   └── schema.json
+│   └── indexTypesense.ts # script that index data from guitar.json into typesense server
 └── src/
     ├── components/
-    │   └── ...
-    └── routes/
-        └── ...
+    │   └── UI components...
+    ├── hooks/
+    │   └── useInstantsearch.ts # run instantsearch.js after render
+    ├── routes/
+    │   └── index.tsx # guitar chords search
+    └── utils/
+        ├── reactChords.ts # draw guitar chord svg
+        └── typesense.ts # typesense-instantsearch-adapter config
 ```
-
-- `src/routes`: Provides the directory-based routing, which can include a hierarchy of `layout.tsx` layout files, and an `index.tsx` file as the page. Additionally, `index.ts` files are endpoints. Please see the [routing docs](https://qwik.builder.io/qwikcity/routing/overview/) for more info.
-
-- `src/components`: Recommended directory for components.
-
-- `public`: Any static assets, like images, can be placed in the public directory. Please see the [Vite public directory](https://vitejs.dev/guide/assets.html#the-public-directory) for more info.
-
-## Add Integrations and deployment
-
-Use the `npm run qwik add` command to add additional integrations. Some examples of integrations includes: Cloudflare, Netlify or Express Server, and the [Static Site Generator (SSG)](https://qwik.builder.io/qwikcity/guides/static-site-generation/).
-
-```shell
-npm run qwik add # or `yarn qwik add`
-```
-
 ## Development
 
-Development mode uses [Vite's development server](https://vitejs.dev/). The `dev` command will server-side render (SSR) the output during development.
+To run this project locally, make sure you have docker and nodejs, install the dependencies and run the local server:
+
+Installation
 
 ```shell
-npm start # or `yarn start`
+git clone https://github.com/typesense/showcase-guitar-chords-search-qwik.git
+
+cd showcase-guitar-chords-search-qwik
+
+npm i
 ```
 
-> Note: during dev mode, Vite may request a significant number of `.js` files. This does not represent a Qwik production build.
-
-## Preview
-
-The preview command will create a production build of the client modules, a production build of `src/entry.preview.tsx`, and run a local server. The preview server is only for convenience to preview a production build locally and should not be used as a production server.
+Start typesense server
 
 ```shell
-npm run preview # or `yarn preview`
+npm run start:typesense # or: docker compose up
 ```
 
-## Production
-
-The production build will generate client and server modules by running both client and server build commands. The build command will use Typescript to run a type check on the source code.
+Index data into typesense
 
 ```shell
-npm run build # or `yarn build`
+npm run index:typesense
+```
+
+Start the dev web app
+
+```shell
+npm run dev
+```
+
+Open http://localhost:5173/ to see the app ✌️
+
+## Deployment
+Set env variables to point the app to the Typesense Cluster
+
+```env
+PUBLIC_TYPESENSE_SEARCH_ONLY_API_KEY=xxx
+PUBLIC_TYPESENSE_HOST=xxx.typesense.net
+PUBLIC_TYPESENSE_PORT=443
+PUBLIC_TYPESENSE_PROTOCOL=https
 ```
