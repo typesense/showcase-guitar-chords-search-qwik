@@ -24,7 +24,8 @@
     "start": "vite --open --mode ssr",
     "qwik": "qwik",
     "start:typesense": "docker compose up",
-    "index:typesense": "npx tsx ./scripts/indexTypesense.ts"
+    "index:typesense": "npx tsx ./scripts/indexTypesense.ts",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
     "@builder.io/qwik": "^1.4.3",
@@ -34,6 +35,7 @@
     "@types/react-dom": "^18.2.18",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
     "@typescript-eslint/parser": "^6.19.1",
+    "cypress": "^13.6.4",
     "dotenv": "^16.4.1",
     "eslint": "^8.56.0",
     "eslint-plugin-qwik": "^1.4.3",
