@@ -1,6 +1,6 @@
 {
-  "name": "my-qwik-basic-starter",
-  "description": "Demo App with Routing built-in (recommended)",
+  "name": "showcase-guitar-chords-search-qwik",
+  "description": "A demo that shows how to implement Typesense in a Qwik app",
   "engines": {
     "node": ">=15.0.0"
   },
