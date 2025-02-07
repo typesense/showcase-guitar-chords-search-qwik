@@ -25,11 +25,11 @@ export default component$(() => {
 });
 
 export const head: DocumentHead = {
-  title: 'Welcome to Qwik',
+  title: 'Guitar Chords search Qwik | Typesense',
   meta: [
     {
       name: 'description',
-      content: 'Qwik site description',
+      content: 'Guitar Chords search Qwik powered by Typesense',
     },
   ],
 };
